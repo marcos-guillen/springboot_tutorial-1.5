@@ -44,8 +44,9 @@ public class ProjectServiceImpl implements IProjectService {
     public ProjectDTO get(Long id) throws ProjectNotFoundException, TechnicalException {
         ProjectDTO projectDto = null;
         try {
-            Project projectEntity = projectRepo.getOne(id);
-            modelMapper.map(projectEntity, ProjectDTO.class);
+            // Project projectEntity = projectRepo.getOne(id);
+            Project projectEntity = projectRepo.findById(id).get();
+            projectDto=modelMapper.map(projectEntity, ProjectDTO.class);
         } catch (EntityNotFoundException e) {
             throw new ProjectNotFoundException(id, e);
         } catch (Exception e) {
@@ -74,6 +75,20 @@ public class ProjectServiceImpl implements IProjectService {
             throw new TechnicalException(e);
         }
 
+    }
+
+    @Override
+    public ProjectDTO getNameDto(String name) throws ProjectNotFoundException, TechnicalException {
+        ProjectDTO projectDto = null;
+        try {
+            Project projectEntity = projectRepo.findByName(name);
+            modelMapper.map(projectEntity, ProjectDTO.class);
+        } catch (EntityNotFoundException e) {
+            throw new ProjectNotFoundException(name, e);
+        } catch (Exception e) {
+            throw new TechnicalException(e);
+        }
+        return projectDto;
     }
 
 }
